@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>mobility_camera_bringup</name>
+  <version>0.0.1</version>
+  <description>Launch files for USB camera bringup in MobilityCapstoneDesign2026.</description>
+
+  <maintainer email="vic@example.com">vic</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <exec_depend>usb_cam</exec_depend>
+  <exec_depend>image_view</exec_depend>
+  <exec_depend>rqt_image_view</exec_depend>
+</package>

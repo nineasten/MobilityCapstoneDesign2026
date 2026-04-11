@@ -1,0 +1,8 @@
+<launch>
+  <include file="$(find mobility_camera_bringup)/launch/arducam_imx219.launch" />
+
+  <node name="arducam_image_view" pkg="image_view" type="image_view" output="screen">
+    <remap from="image" to="/arducam_imx219/image_raw" />
+    <param name="autosize" value="true" />
+  </node>
+</launch>

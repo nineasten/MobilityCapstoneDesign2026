@@ -1,0 +1,20 @@
+<launch>
+  <arg name="video_device" default="/dev/video2" />
+  <arg name="image_width" default="1920" />
+  <arg name="image_height" default="1080" />
+  <arg name="framerate" default="30" />
+  <arg name="pixel_format" default="mjpeg" />
+  <arg name="camera_name" default="arducam_imx219" />
+  <arg name="camera_frame_id" default="arducam_imx219" />
+
+  <node name="$(arg camera_name)" pkg="usb_cam" type="usb_cam_node" output="screen">
+    <param name="video_device" value="$(arg video_device)" />
+    <param name="image_width" value="$(arg image_width)" />
+    <param name="image_height" value="$(arg image_height)" />
+    <param name="pixel_format" value="$(arg pixel_format)" />
+    <param name="camera_frame_id" value="$(arg camera_frame_id)" />
+    <param name="camera_name" value="$(arg camera_name)" />
+    <param name="framerate" value="$(arg framerate)" />
+    <param name="io_method" value="mmap" />
+  </node>
+</launch>
