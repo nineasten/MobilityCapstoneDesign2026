@@ -22,6 +22,28 @@ planner -> destination selector -> Unity AR renderer on Rokid Max glasses
   only (ribbon, arrows, destination pin, minimap, occupancy occlusion) -
   Rokid Max is optical see-through, no camera backdrop.
 
+## Unity / Rokid Max integration
+
+- The Unity project (`capstonews/unity/ARPathRenderer`, tracked in the outer
+  `capstonews` repo which has no GitHub remote - it's local-only) runs on a
+  separate PC tethered to the Rokid Max via HDMI/USB-C. It does **not** run
+  on the Orin.
+- Unity connects to ROS via `ROSConnection.GetOrCreateInstance()` (scripts:
+  `RosPoseCameraTracker.cs`, `RosPathRibbonRenderer.cs`,
+  `RosOccupancyOcclusionRenderer.cs`, `RosTopDownMinimapOverlay.cs`,
+  `RosProjectedPathImageOverlay.cs`) - the ROS IP/port is set in the Unity
+  Editor's ROSConnection settings (not version-controlled). **When switching
+  roscore from the laptop to the Orin, update this to the Orin's IP**
+  (currently `192.168.75.114` on the lab wifi/LAN).
+- The ROS-side bridge is the `ros_tcp_endpoint` catkin package (Unity's
+  ROS-TCP-Endpoint v0.7.0, with a 1-line `python3` shebang fix for Noetic).
+  It lives alongside `MobilityCapstoneDesign2026` in `capstonews/src/` (own
+  git repo, upstream `Unity-Technologies/ROS-TCP-Endpoint`) and has been
+  copied into the Orin's catkin_ws (`catkin_ws/src/ros_tcp_endpoint`) -
+  needs `catkin build`/`catkin_make` there. Run via
+  `roslaunch ros_tcp_endpoint endpoint.launch` (or include it in the main
+  bringup launch) so Unity can connect.
+
 ## Orin migration (in progress)
 
 Target board: Jetson AGX Orin 64GB Developer Kit. Goal: confirm the laptop
