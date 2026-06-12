@@ -357,8 +357,10 @@ class PersistentHlocLocalizer:
         self.superpoint = self._load_model(
             self.modules["extractors"], self.local_conf["model"], self.use_fp16
         )
-        # Matcher stays FP32: SuperGlue/LightGlue feed pre-stored reference
-        # features whose dtype is fixed by FeaturePairsDataset.
+        # Matcher weights stay FP32 (FeaturePairsDataset always yields FP32
+        # tensors); FP16 speedup is applied via autocast in match_pairs(),
+        # which LightGlue itself handles internally (casts descriptors to
+        # half for attention while keeping norms/softmax in FP32).
         self.matcher = self._load_model(
             self.modules["matchers"], self.matcher_conf["model"]
         )
@@ -457,7 +459,11 @@ class PersistentHlocLocalizer:
                 key: value if key.startswith("image") else value.to(self.device)
                 for key, value in data.items()
             }
-            pred = self.matcher(data)
+            if self.use_fp16:
+                with torch.autocast(device_type="cuda", dtype=torch.float16):
+                    pred = self.matcher(data)
+            else:
+                pred = self.matcher(data)
             pair = self.modules["names_to_pair"](*pairs[index])
             with h5py.File(str(matches_path), "a", libver="latest") as fd:
                 if pair in fd:
