@@ -1,0 +1,113 @@
+<launch>
+  <arg name="start_map_publisher" default="true" />
+  <arg name="start_localization" default="false" />
+  <arg name="start_destination_selector" default="true" />
+  <arg name="voxel_map_file" default="$(env HOME)/capstonews/src/planning_future_arducam/voxel_map.npz" />
+  <arg name="localization_image_topic" default="/arducam_imx219/image_raw" />
+  <arg name="localization_camera_info_topic" default="/arducam_imx219/camera_info" />
+  <arg name="current_pose_topic" default="/planner/current_pose" />
+  <arg name="gui_on_start" default="true" />
+  <arg name="rviz_on_select" default="true" />
+  <arg name="inflation_radius" default="0.10" />
+  <arg name="path_line_width" default="0.28" />
+  <arg name="path_marker_alpha" default="0.65" />
+  <arg name="preferred_clearance" default="0.9" />
+  <arg name="clearance_cost_weight" default="4.0" />
+  <arg name="clearance_cost_power" default="2.0" />
+  <arg name="centerline_cost_weight" default="12.0" />
+  <arg name="centerline_clearance" default="1.8" />
+  <arg name="centerline_cost_power" default="2.0" />
+  <arg name="turn_cost_weight" default="1.2" />
+  <arg name="simplify_path" default="true" />
+  <arg name="simplify_clearance_cost_margin" default="0.30" />
+  <arg name="replan_distance" default="1.0" />
+  <arg name="unity_path_topic" default="/path_planner/unity_path" />
+  <arg name="unity_path_hover_height" default="0.0" />
+  <arg name="unity_path_resample_spacing" default="0.30" />
+  <arg name="unity_path_smoothing_iterations" default="0" />
+  <arg name="unity_path_corner_cut" default="0.12" />
+  <arg name="unity_path_simplify_tolerance" default="0.25" />
+  <arg name="clicked_point_mode" default="sequence" />
+  <arg name="auto_advance_current" default="false" />
+  <arg name="auto_advance_distance" default="5.0" />
+  <arg name="auto_advance_period" default="2.0" />
+  <arg name="current_marker_scale" default="0.40" />
+  <arg name="goal_marker_scale" default="0.42" />
+  <arg name="current_pose_project_to_ground" default="true" />
+  <arg name="current_pose_ground_z" default="0.0" />
+  <arg name="current_pose_overrides_auto_advance" default="true" />
+  <arg name="localization_blur_threshold" default="0.0" />
+  <arg name="localization_device" default="auto" />
+  <arg name="localization_min_interval" default="0.5" />
+  <arg name="localization_top_k" default="5" />
+  <arg name="localization_max_keypoints" default="512" />
+  <arg name="localization_resize_max" default="800" />
+  <arg name="localization_min_inliers" default="60" />
+
+  <include
+    if="$(arg start_map_publisher)"
+    file="$(find destination_selector)/launch/voxel_map_publisher.launch">
+    <arg name="input" value="$(arg voxel_map_file)" />
+    <arg name="frame_id" value="map" />
+    <arg name="grid_topic" value="/voxel_map/xy_occupancy" />
+    <arg name="bounds_topic" value="/voxel_map/bounds" />
+    <arg name="occupied_topic" value="/voxel_map/occupied_points" />
+    <arg name="surface_topic" value="/voxel_map/surface_points" />
+  </include>
+
+  <include
+    if="$(arg start_localization)"
+    file="$(find hloc_localization)/launch/hloc_localization.launch">
+    <arg name="image_topic" value="$(arg localization_image_topic)" />
+    <arg name="camera_info_topic" value="$(arg localization_camera_info_topic)" />
+    <arg name="pose_topic" value="$(arg current_pose_topic)" />
+    <arg name="status_topic" value="/hloc_localization/status" />
+    <arg name="frame_id" value="map" />
+    <arg name="blur_threshold" value="$(arg localization_blur_threshold)" />
+    <arg name="device" value="$(arg localization_device)" />
+    <arg name="min_interval" value="$(arg localization_min_interval)" />
+    <arg name="top_k" value="$(arg localization_top_k)" />
+    <arg name="max_keypoints" value="$(arg localization_max_keypoints)" />
+    <arg name="resize_max" value="$(arg localization_resize_max)" />
+    <arg name="min_inliers" value="$(arg localization_min_inliers)" />
+  </include>
+
+  <include file="$(find occupancy_path_planner)/launch/occupancy_path_planner.launch">
+    <arg name="inflation_radius" value="$(arg inflation_radius)" />
+    <arg name="path_line_width" value="$(arg path_line_width)" />
+    <arg name="path_marker_alpha" value="$(arg path_marker_alpha)" />
+    <arg name="preferred_clearance" value="$(arg preferred_clearance)" />
+    <arg name="clearance_cost_weight" value="$(arg clearance_cost_weight)" />
+    <arg name="clearance_cost_power" value="$(arg clearance_cost_power)" />
+    <arg name="centerline_cost_weight" value="$(arg centerline_cost_weight)" />
+    <arg name="centerline_clearance" value="$(arg centerline_clearance)" />
+    <arg name="centerline_cost_power" value="$(arg centerline_cost_power)" />
+    <arg name="turn_cost_weight" value="$(arg turn_cost_weight)" />
+    <arg name="simplify_path" value="$(arg simplify_path)" />
+    <arg name="simplify_clearance_cost_margin" value="$(arg simplify_clearance_cost_margin)" />
+    <arg name="replan_distance" value="$(arg replan_distance)" />
+    <arg name="unity_path_topic" value="$(arg unity_path_topic)" />
+    <arg name="unity_path_hover_height" value="$(arg unity_path_hover_height)" />
+    <arg name="unity_path_resample_spacing" value="$(arg unity_path_resample_spacing)" />
+    <arg name="unity_path_smoothing_iterations" value="$(arg unity_path_smoothing_iterations)" />
+    <arg name="unity_path_corner_cut" value="$(arg unity_path_corner_cut)" />
+    <arg name="unity_path_simplify_tolerance" value="$(arg unity_path_simplify_tolerance)" />
+  </include>
+
+  <include
+    if="$(arg start_destination_selector)"
+    file="$(find destination_selector)/launch/destination_selector.launch">
+    <arg name="current_pose_topic" value="$(arg current_pose_topic)" />
+    <arg name="current_pose_project_to_ground" value="$(arg current_pose_project_to_ground)" />
+    <arg name="current_pose_ground_z" value="$(arg current_pose_ground_z)" />
+    <arg name="current_pose_overrides_auto_advance" value="$(arg current_pose_overrides_auto_advance)" />
+    <arg name="gui_on_start" value="$(arg gui_on_start)" />
+    <arg name="rviz_on_select" value="$(arg rviz_on_select)" />
+    <arg name="clicked_point_mode" value="$(arg clicked_point_mode)" />
+    <arg name="auto_advance_current" value="$(arg auto_advance_current)" />
+    <arg name="auto_advance_distance" value="$(arg auto_advance_distance)" />
+    <arg name="auto_advance_period" value="$(arg auto_advance_period)" />
+    <arg name="current_marker_scale" value="$(arg current_marker_scale)" />
+    <arg name="goal_marker_scale" value="$(arg goal_marker_scale)" />
+  </include>
+</launch>

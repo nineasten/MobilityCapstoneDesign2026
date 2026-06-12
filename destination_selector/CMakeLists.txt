@@ -1,21 +1,22 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(mobility_camera_bringup)
+project(destination_selector)
 
 find_package(catkin REQUIRED COMPONENTS
-  cv_bridge
+  geometry_msgs
+  nav_msgs
   rospy
-  sensor_msgs
+  std_msgs
+  visualization_msgs
 )
 
 catkin_package()
 
 catkin_install_python(PROGRAMS
-  scripts/arducam_capture_controller.py
-  scripts/arducam_camera_config.py
-  scripts/arducam_space_capture_controller.py
+  scripts/destination_selector_node.py
+  scripts/voxel_map_publisher.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
-install(DIRECTORY config launch
+install(DIRECTORY config launch rviz
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )

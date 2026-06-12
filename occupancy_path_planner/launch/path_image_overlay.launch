@@ -1,0 +1,30 @@
+<launch>
+  <arg name="image_path" />
+  <arg name="output_path" default="" />
+  <arg name="path_topic" default="/path_planner/path" />
+  <arg name="wait_timeout" default="10.0" />
+
+  <arg name="floor_z" default="0.03" />
+  <arg name="camera_height" default="1.55" />
+  <arg name="camera_yaw_deg" default="" />
+  <arg name="camera_pitch_deg" default="-10.0" />
+  <arg name="lookahead_distance" default="2.0" />
+  <arg name="horizontal_fov_deg" default="70.0" />
+
+  <node
+    pkg="occupancy_path_planner"
+    type="path_image_overlay.py"
+    name="path_image_overlay"
+    output="screen">
+    <param name="image_path" value="$(arg image_path)" />
+    <param name="output_path" value="$(arg output_path)" />
+    <param name="path_topic" value="$(arg path_topic)" />
+    <param name="wait_timeout" value="$(arg wait_timeout)" />
+    <param name="floor_z" value="$(arg floor_z)" />
+    <param name="camera_height" value="$(arg camera_height)" />
+    <param name="camera_yaw_deg" value="$(arg camera_yaw_deg)" />
+    <param name="camera_pitch_deg" value="$(arg camera_pitch_deg)" />
+    <param name="lookahead_distance" value="$(arg lookahead_distance)" />
+    <param name="horizontal_fov_deg" value="$(arg horizontal_fov_deg)" />
+  </node>
+</launch>

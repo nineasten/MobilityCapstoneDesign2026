@@ -1,0 +1,42 @@
+<launch>
+  <arg name="input" default="$(env HOME)/capstonews/src/planning_future_arducam/voxel_map.npz" />
+  <arg name="frame_id" default="map" />
+
+  <arg name="occupied_topic" default="/voxel_map/occupied_points" />
+  <arg name="surface_topic" default="/voxel_map/surface_points" />
+  <arg name="grid_topic" default="/voxel_map/xy_occupancy" />
+  <arg name="bounds_topic" default="/voxel_map/bounds" />
+
+  <arg name="rate" default="0.5" />
+  <arg name="occupied_max_points" default="0" />
+  <arg name="surface_max_points" default="0" />
+
+  <arg name="occupied_min_z" default="0.0" />
+  <arg name="occupied_max_z" default="1.8" />
+  <arg name="surface_min_z" default="0.0" />
+  <arg name="surface_max_z" default="1.8" />
+  <arg name="grid_min_z" default="0.0" />
+  <arg name="grid_max_z" default="1.8" />
+
+  <node
+    pkg="destination_selector"
+    type="voxel_map_publisher.py"
+    name="voxel_map_rviz_publisher"
+    output="screen"
+    args="
+      --input $(arg input)
+      --frame-id $(arg frame_id)
+      --occupied-topic $(arg occupied_topic)
+      --surface-topic $(arg surface_topic)
+      --grid-topic $(arg grid_topic)
+      --bounds-topic $(arg bounds_topic)
+      --rate $(arg rate)
+      --occupied-max-points $(arg occupied_max_points)
+      --surface-max-points $(arg surface_max_points)
+      --occupied-min-z $(arg occupied_min_z)
+      --occupied-max-z $(arg occupied_max_z)
+      --surface-min-z $(arg surface_min_z)
+      --surface-max-z $(arg surface_max_z)
+      --grid-min-z $(arg grid_min_z)
+      --grid-max-z $(arg grid_max_z)" />
+</launch>

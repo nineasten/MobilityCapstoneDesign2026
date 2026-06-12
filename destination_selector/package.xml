@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>destination_selector</name>
+  <version>0.0.1</version>
+  <description>Destination selection and RViz visualization helpers for map-based planning.</description>
+
+  <maintainer email="vic@example.com">vic</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>geometry_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>rospy</depend>
+  <depend>std_msgs</depend>
+  <depend>visualization_msgs</depend>
+
+  <exec_depend>python3-rospkg</exec_depend>
+  <exec_depend>python3-tk</exec_depend>
+  <exec_depend>python3-yaml</exec_depend>
+  <exec_depend>rviz</exec_depend>
+</package>

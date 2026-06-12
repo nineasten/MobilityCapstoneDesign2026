@@ -1,0 +1,70 @@
+<launch>
+  <arg name="video_device" default="/dev/v4l/by-id/usb-Arducam_Arducam_B0495__USB3_2.3MP__Arducam_202500915_0001-video-index0" />
+  <arg name="image_width" default="1920" />
+  <arg name="image_height" default="1200" />
+  <arg name="framerate" default="30" />
+  <arg name="pixel_format" default="yuyv" />
+  <arg name="camera_name" default="arducam_imx219" />
+  <arg name="camera_frame_id" default="arducam_imx219" />
+  <arg name="camera_info_url" default="file://$(find mobility_camera_bringup)/config/arducam_camera_info.yaml" />
+  <arg name="respawn" default="true" />
+  <arg name="respawn_delay" default="2.0" />
+  <arg name="save_root" default="$(find mobility_camera_bringup)/captured_images" />
+  <arg name="image_prefix" default="arducam" />
+  <arg name="jpeg_quality" default="98" />
+  <arg name="auto_exposure" default="1" />
+  <arg name="exposure_time_absolute" default="40" />
+  <arg name="exposure_dynamic_framerate" default="" />
+  <arg name="gain" default="336" />
+  <arg name="white_balance_automatic" default="0" />
+  <arg name="white_balance_temperature" default="4500" />
+  <arg name="power_line_frequency" default="2" />
+  <arg name="brightness" default="0" />
+  <arg name="contrast" default="10" />
+  <arg name="saturation" default="10" />
+  <arg name="settle_delay" default="0.50" />
+  <arg name="settle_timeout" default="1.0" />
+
+  <node name="arducam_camera_config"
+        pkg="mobility_camera_bringup"
+        type="arducam_camera_config.py"
+        output="screen">
+    <param name="video_device" value="$(arg video_device)" />
+    <param name="auto_exposure" value="$(arg auto_exposure)" />
+    <param name="exposure_time_absolute" value="$(arg exposure_time_absolute)" />
+    <param name="exposure_dynamic_framerate" value="$(arg exposure_dynamic_framerate)" />
+    <param name="gain" value="$(arg gain)" />
+    <param name="white_balance_automatic" value="$(arg white_balance_automatic)" />
+    <param name="white_balance_temperature" value="$(arg white_balance_temperature)" />
+    <param name="power_line_frequency" value="$(arg power_line_frequency)" />
+    <param name="brightness" value="$(arg brightness)" />
+    <param name="contrast" value="$(arg contrast)" />
+    <param name="saturation" value="$(arg saturation)" />
+  </node>
+
+  <include file="$(find mobility_camera_bringup)/launch/arducam_imx219.launch">
+    <arg name="video_device" value="$(arg video_device)" />
+    <arg name="image_width" value="$(arg image_width)" />
+    <arg name="image_height" value="$(arg image_height)" />
+    <arg name="framerate" value="$(arg framerate)" />
+    <arg name="pixel_format" value="$(arg pixel_format)" />
+    <arg name="camera_name" value="$(arg camera_name)" />
+    <arg name="camera_frame_id" value="$(arg camera_frame_id)" />
+    <arg name="camera_info_url" value="$(arg camera_info_url)" />
+    <arg name="respawn" value="$(arg respawn)" />
+    <arg name="respawn_delay" value="$(arg respawn_delay)" />
+  </include>
+
+  <node name="arducam_space_capture_controller"
+        pkg="mobility_camera_bringup"
+        type="arducam_space_capture_controller.py"
+        output="screen">
+    <param name="camera_name" value="$(arg camera_name)" />
+    <param name="image_topic" value="/$(arg camera_name)/image_raw" />
+    <param name="save_root" value="$(arg save_root)" />
+    <param name="image_prefix" value="$(arg image_prefix)" />
+    <param name="jpeg_quality" value="$(arg jpeg_quality)" />
+    <param name="settle_delay" value="$(arg settle_delay)" />
+    <param name="settle_timeout" value="$(arg settle_timeout)" />
+  </node>
+</launch>

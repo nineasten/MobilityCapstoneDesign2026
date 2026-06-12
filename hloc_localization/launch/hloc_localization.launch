@@ -1,0 +1,70 @@
+<launch>
+  <arg name="image_topic" default="/arducam_imx219/image_raw" />
+  <arg name="camera_info_topic" default="/arducam_imx219/camera_info" />
+  <arg name="pose_topic" default="/planner/current_pose" />
+  <arg name="status_topic" default="/hloc_localization/status" />
+  <arg name="frame_id" default="map" />
+
+  <arg name="reference_dir" default="$(env HOME)/capstonews/src/hloc_reference" />
+  <arg name="calibration_file" default="$(env HOME)/capstonews/src/calibration.json" />
+  <arg name="runtime_dir" default="" />
+
+  <arg name="min_interval" default="0.5" />
+  <arg name="jpeg_quality" default="95" />
+  <arg name="blur_threshold" default="45.0" />
+  <arg name="top_k" default="5" />
+  <arg name="max_keypoints" default="512" />
+  <arg name="resize_max" default="800" />
+  <arg name="matcher" default="superpoint+lightglue" />
+  <arg name="ransac_thresh" default="12" />
+  <arg name="min_inliers" default="60" />
+  <arg name="device" default="auto" />
+  <arg name="fp16" default="true" />
+  <arg name="confidence_scale_inliers" default="200.0" />
+  <arg name="prefer_camera_info_distortion" default="true" />
+  <arg name="enable_result_log" default="false" />
+  <arg name="result_log_path" default="" />
+  <arg name="torch_home" default="$(env HOME)/capstonews/model_cache/torch" />
+  <arg name="hloc_third_party_dir" default="$(env HOME)/capstonews/external/hloc/third_party" />
+
+  <arg name="fx" default="0.0" />
+  <arg name="fy" default="0.0" />
+  <arg name="cx" default="0.0" />
+  <arg name="cy" default="0.0" />
+
+  <node
+    pkg="hloc_localization"
+    type="hloc_persistent_localization_node.py"
+    name="hloc_localization"
+    output="screen">
+    <param name="image_topic" value="$(arg image_topic)" />
+    <param name="camera_info_topic" value="$(arg camera_info_topic)" />
+    <param name="pose_topic" value="$(arg pose_topic)" />
+    <param name="status_topic" value="$(arg status_topic)" />
+    <param name="frame_id" value="$(arg frame_id)" />
+    <param name="reference_dir" value="$(arg reference_dir)" />
+    <param name="calibration_file" value="$(arg calibration_file)" />
+    <param name="runtime_dir" value="$(arg runtime_dir)" />
+    <param name="min_interval" value="$(arg min_interval)" />
+    <param name="jpeg_quality" value="$(arg jpeg_quality)" />
+    <param name="blur_threshold" value="$(arg blur_threshold)" />
+    <param name="top_k" value="$(arg top_k)" />
+    <param name="max_keypoints" value="$(arg max_keypoints)" />
+    <param name="resize_max" value="$(arg resize_max)" />
+    <param name="matcher" value="$(arg matcher)" />
+    <param name="ransac_thresh" value="$(arg ransac_thresh)" />
+    <param name="min_inliers" value="$(arg min_inliers)" />
+    <param name="device" value="$(arg device)" />
+    <param name="fp16" value="$(arg fp16)" />
+    <param name="confidence_scale_inliers" value="$(arg confidence_scale_inliers)" />
+    <param name="prefer_camera_info_distortion" value="$(arg prefer_camera_info_distortion)" />
+    <param name="enable_result_log" value="$(arg enable_result_log)" />
+    <param name="result_log_path" value="$(arg result_log_path)" />
+    <param name="torch_home" value="$(arg torch_home)" />
+    <param name="hloc_third_party_dir" value="$(arg hloc_third_party_dir)" />
+    <param name="fx" value="$(arg fx)" />
+    <param name="fy" value="$(arg fy)" />
+    <param name="cx" value="$(arg cx)" />
+    <param name="cy" value="$(arg cy)" />
+  </node>
+</launch>

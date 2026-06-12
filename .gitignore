@@ -24,3 +24,15 @@ out/
 # Environment files
 .env
 .env.*
+
+# COLMAP/SfM databases and archives (large data, not source)
+database.db
+database.db-shm
+database.db-wal
+mobility_camera_bringup/database.db
+*.zip
+
+# Debug/test capture artifacts
+img_0001*.jpg
+img_0001*.png
+mobility_camera_bringup/captured_images/

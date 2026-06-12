@@ -1,0 +1,42 @@
+<launch>
+  <arg name="image_topic" default="/arducam_imx219/image_raw" />
+  <arg name="camera_info_topic" default="/arducam_imx219/camera_info" />
+  <arg name="overlay_topic" default="/path_planner/overlay_image" />
+  <arg name="path_topic" default="/path_planner/path" />
+  <arg name="pose_topic" default="/planner/current_pose" />
+
+  <arg name="floor_z" default="0.03" />
+  <arg name="camera_height" default="1.55" />
+  <arg name="force_camera_height" default="true" />
+  <arg name="camera_pitch_deg" default="-12.0" />
+  <arg name="camera_yaw_offset_deg" default="0.0" />
+  <arg name="camera_forward_offset" default="0.0" />
+  <arg name="camera_right_offset" default="0.0" />
+  <arg name="camera_up_offset" default="0.0" />
+  <arg name="horizontal_fov_deg" default="70.0" />
+  <arg name="use_path_start_fallback" default="true" />
+  <arg name="publish_passthrough" default="true" />
+
+  <node
+    pkg="occupancy_path_planner"
+    type="path_live_image_overlay.py"
+    name="path_live_image_overlay"
+    output="screen">
+    <param name="image_topic" value="$(arg image_topic)" />
+    <param name="camera_info_topic" value="$(arg camera_info_topic)" />
+    <param name="overlay_topic" value="$(arg overlay_topic)" />
+    <param name="path_topic" value="$(arg path_topic)" />
+    <param name="pose_topic" value="$(arg pose_topic)" />
+    <param name="floor_z" value="$(arg floor_z)" />
+    <param name="camera_height" value="$(arg camera_height)" />
+    <param name="force_camera_height" value="$(arg force_camera_height)" />
+    <param name="camera_pitch_deg" value="$(arg camera_pitch_deg)" />
+    <param name="camera_yaw_offset_deg" value="$(arg camera_yaw_offset_deg)" />
+    <param name="camera_forward_offset" value="$(arg camera_forward_offset)" />
+    <param name="camera_right_offset" value="$(arg camera_right_offset)" />
+    <param name="camera_up_offset" value="$(arg camera_up_offset)" />
+    <param name="horizontal_fov_deg" value="$(arg horizontal_fov_deg)" />
+    <param name="use_path_start_fallback" value="$(arg use_path_start_fallback)" />
+    <param name="publish_passthrough" value="$(arg publish_passthrough)" />
+  </node>
+</launch>

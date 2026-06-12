@@ -1,0 +1,91 @@
+<launch>
+  <arg name="image_topic" default="/arducam_imx219/image_raw" />
+  <arg name="camera_info_topic" default="/arducam_imx219/camera_info" />
+  <arg name="pose_topic" default="/planner/current_pose" />
+  <arg name="status_topic" default="/hloc_localization/status" />
+  <arg name="pose_marker_topic" default="/hloc_localization/pose_marker" />
+  <arg name="heading_axis" default="camera_z" />
+  <arg name="frame_id" default="map" />
+
+  <arg name="reference_dir" default="$(env HOME)/capstonews/src/hloc_reference" />
+  <arg name="calibration_file" default="$(env HOME)/capstonews/src/calibration.json" />
+  <arg name="voxel_map_file" default="$(env HOME)/capstonews/src/planning_future_arducam/voxel_map.npz" />
+  <arg name="runtime_dir" default="" />
+
+  <arg name="blur_threshold" default="0.0" />
+  <arg name="min_interval" default="0.25" />
+  <arg name="min_inliers" default="60" />
+  <arg name="device" default="auto" />
+
+  <arg name="rviz" default="true" />
+  <arg name="rviz_config" default="$(find hloc_localization)/rviz/hloc_on_map_bag_demo.rviz" />
+
+  <arg name="play_bag" default="false" />
+  <arg name="bag_path" default="$(env HOME)/capstonews/data/cam_bag/2026-05-14-08-36-49.bag" />
+  <arg name="bag_delay" default="8" />
+
+  <include file="$(find hloc_localization)/launch/hloc_reference_pointcloud.launch">
+    <arg name="reference_dir" value="$(arg reference_dir)" />
+    <arg name="calibration_file" value="$(arg calibration_file)" />
+    <arg name="frame_id" value="$(arg frame_id)" />
+    <arg name="topic" value="/hloc_reference/points" />
+    <arg name="occupancy_topic" value="/hloc_reference/xy_occupancy" />
+    <arg name="bounds_topic" value="/hloc_reference/bounds" />
+    <arg name="eraser_topic" value="/hloc_reference/erasers" />
+    <arg name="edit_mode" value="false" />
+    <arg name="publish_erasers" value="false" />
+    <arg name="rviz" value="false" />
+  </include>
+
+  <include file="$(find destination_selector)/launch/voxel_map_publisher.launch">
+    <arg name="input" value="$(arg voxel_map_file)" />
+    <arg name="frame_id" value="$(arg frame_id)" />
+    <arg name="grid_topic" value="/voxel_map/xy_occupancy" />
+    <arg name="bounds_topic" value="/voxel_map/bounds" />
+    <arg name="occupied_topic" value="/voxel_map/occupied_points" />
+    <arg name="surface_topic" value="/voxel_map/surface_points" />
+  </include>
+
+  <include file="$(find hloc_localization)/launch/hloc_localization.launch">
+    <arg name="image_topic" value="$(arg image_topic)" />
+    <arg name="camera_info_topic" value="$(arg camera_info_topic)" />
+    <arg name="pose_topic" value="$(arg pose_topic)" />
+    <arg name="status_topic" value="$(arg status_topic)" />
+    <arg name="frame_id" value="$(arg frame_id)" />
+    <arg name="reference_dir" value="$(arg reference_dir)" />
+    <arg name="calibration_file" value="$(arg calibration_file)" />
+    <arg name="runtime_dir" value="$(arg runtime_dir)" />
+    <arg name="blur_threshold" value="$(arg blur_threshold)" />
+    <arg name="min_interval" value="$(arg min_interval)" />
+    <arg name="min_inliers" value="$(arg min_inliers)" />
+    <arg name="device" value="$(arg device)" />
+  </include>
+
+  <node
+    pkg="hloc_localization"
+    type="hloc_pose_marker_node.py"
+    name="hloc_pose_marker"
+    output="screen">
+    <param name="pose_topic" value="$(arg pose_topic)" />
+    <param name="marker_topic" value="$(arg pose_marker_topic)" />
+    <param name="frame_id" value="$(arg frame_id)" />
+    <param name="heading_axis" value="$(arg heading_axis)" />
+    <param name="project_to_ground" value="true" />
+  </node>
+
+  <node
+    if="$(arg rviz)"
+    pkg="rviz"
+    type="rviz"
+    name="hloc_on_map_rviz"
+    args="-d $(arg rviz_config)"
+    output="screen" />
+
+  <node
+    if="$(arg play_bag)"
+    pkg="rosbag"
+    type="play"
+    name="hloc_demo_bag_play"
+    args="--delay=$(arg bag_delay) $(arg bag_path)"
+    output="screen" />
+</launch>

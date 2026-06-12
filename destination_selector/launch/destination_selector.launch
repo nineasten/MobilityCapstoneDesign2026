@@ -1,0 +1,81 @@
+<launch>
+  <arg name="config_path" default="$(find destination_selector)/config/destinations.yaml" />
+  <arg name="frame_id" default="map" />
+  <arg name="occupancy_topic" default="/voxel_map/xy_occupancy" />
+  <arg name="current_pose_topic" default="/planner/current_pose" />
+  <arg name="current_pose_project_to_ground" default="true" />
+  <arg name="current_pose_ground_z" default="0.0" />
+  <arg name="current_pose_overrides_auto_advance" default="true" />
+  <arg name="clicked_point_topic" default="/clicked_point" />
+  <arg name="current_point_topic" default="/current_position_point" />
+  <arg name="clicked_point_mode" default="sequence" />
+  <arg name="clicked_destination_prefix" default="click" />
+  <arg name="clicked_destination_separator" default="" />
+  <arg name="clicked_destination_index_digits" default="0" />
+  <arg name="clicked_destination_label_prefix" default="Click" />
+  <arg name="clicked_destination_z" default="0.0" />
+  <arg name="autosave_destinations" default="true" />
+  <arg name="show_candidate_markers" default="false" />
+  <arg name="candidate_marker_delete_count" default="200" />
+  <arg name="selection_topic" default="/destination_selector/select_goal" />
+  <arg name="markers_topic" default="/destination_selector/markers" />
+  <arg name="selected_goal_topic" default="/destination_selector/selected_goal" />
+  <arg name="selected_goal_name_topic" default="/destination_selector/selected_goal_name" />
+  <arg name="current_position_topic" default="/destination_selector/current_position" />
+  <arg name="path_topic" default="/path_planner/path" />
+  <arg name="auto_advance_current" default="false" />
+  <arg name="auto_advance_distance" default="5.0" />
+  <arg name="auto_advance_period" default="2.0" />
+  <arg name="auto_advance_min_move" default="0.1" />
+  <arg name="gui_on_start" default="true" />
+  <arg name="shutdown_on_gui_close" default="false" />
+  <arg name="rviz_on_select" default="true" />
+  <arg name="rviz_config_path" default="$(find destination_selector)/rviz/destination_selector.rviz" />
+  <arg name="prompt_on_start" default="false" />
+  <arg name="publish_rate" default="2.0" />
+  <arg name="current_marker_scale" default="0.40" />
+  <arg name="goal_marker_scale" default="0.42" />
+
+  <node
+    pkg="destination_selector"
+    type="destination_selector_node.py"
+    name="destination_selector"
+    output="screen">
+    <param name="config_path" value="$(arg config_path)" />
+    <param name="frame_id" value="$(arg frame_id)" />
+    <param name="occupancy_topic" value="$(arg occupancy_topic)" />
+    <param name="current_pose_topic" value="$(arg current_pose_topic)" />
+    <param name="current_pose_project_to_ground" value="$(arg current_pose_project_to_ground)" />
+    <param name="current_pose_ground_z" value="$(arg current_pose_ground_z)" />
+    <param name="current_pose_overrides_auto_advance" value="$(arg current_pose_overrides_auto_advance)" />
+    <param name="clicked_point_topic" value="$(arg clicked_point_topic)" />
+    <param name="current_point_topic" value="$(arg current_point_topic)" />
+    <param name="clicked_point_mode" value="$(arg clicked_point_mode)" />
+    <param name="clicked_destination_prefix" value="$(arg clicked_destination_prefix)" />
+    <param name="clicked_destination_separator" value="$(arg clicked_destination_separator)" />
+    <param name="clicked_destination_index_digits" value="$(arg clicked_destination_index_digits)" />
+    <param name="clicked_destination_label_prefix" value="$(arg clicked_destination_label_prefix)" />
+    <param name="clicked_destination_z" value="$(arg clicked_destination_z)" />
+    <param name="autosave_destinations" value="$(arg autosave_destinations)" />
+    <param name="show_candidate_markers" value="$(arg show_candidate_markers)" />
+    <param name="candidate_marker_delete_count" value="$(arg candidate_marker_delete_count)" />
+    <param name="selection_topic" value="$(arg selection_topic)" />
+    <param name="markers_topic" value="$(arg markers_topic)" />
+    <param name="selected_goal_topic" value="$(arg selected_goal_topic)" />
+    <param name="selected_goal_name_topic" value="$(arg selected_goal_name_topic)" />
+    <param name="current_position_topic" value="$(arg current_position_topic)" />
+    <param name="path_topic" value="$(arg path_topic)" />
+    <param name="auto_advance_current" value="$(arg auto_advance_current)" />
+    <param name="auto_advance_distance" value="$(arg auto_advance_distance)" />
+    <param name="auto_advance_period" value="$(arg auto_advance_period)" />
+    <param name="auto_advance_min_move" value="$(arg auto_advance_min_move)" />
+    <param name="gui_on_start" value="$(arg gui_on_start)" />
+    <param name="shutdown_on_gui_close" value="$(arg shutdown_on_gui_close)" />
+    <param name="rviz_on_select" value="$(arg rviz_on_select)" />
+    <param name="rviz_config_path" value="$(arg rviz_config_path)" />
+    <param name="prompt_on_start" value="$(arg prompt_on_start)" />
+    <param name="publish_rate" value="$(arg publish_rate)" />
+    <param name="current_marker_scale" value="$(arg current_marker_scale)" />
+    <param name="goal_marker_scale" value="$(arg goal_marker_scale)" />
+  </node>
+</launch>

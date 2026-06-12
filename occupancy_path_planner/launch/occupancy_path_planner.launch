@@ -1,0 +1,124 @@
+<launch>
+  <arg name="occupancy_topic" default="/voxel_map/xy_occupancy" />
+  <arg name="start_topic" default="/destination_selector/current_position" />
+  <arg name="goal_topic" default="/destination_selector/selected_goal" />
+  <arg name="path_topic" default="/path_planner/path" />
+  <arg name="path_marker_topic" default="/path_planner/path_marker" />
+  <arg name="enable_unity_path_processor" default="true" />
+  <arg name="unity_path_topic" default="/path_planner/unity_path" />
+
+  <arg name="obstacle_threshold" default="50" />
+  <arg name="allow_unknown" default="false" />
+  <arg name="connectivity" default="8" />
+  <arg name="inflation_radius" default="0.10" />
+  <arg name="snap_to_free_radius" default="0.6" />
+  <arg name="path_z_offset" default="0.18" />
+  <arg name="path_line_width" default="0.28" />
+  <arg name="path_marker_alpha" default="0.65" />
+  <arg name="preferred_clearance" default="0.9" />
+  <arg name="clearance_cost_weight" default="4.0" />
+  <arg name="clearance_cost_power" default="2.0" />
+  <arg name="centerline_cost_weight" default="12.0" />
+  <arg name="centerline_clearance" default="1.8" />
+  <arg name="centerline_cost_power" default="2.0" />
+  <arg name="turn_cost_weight" default="1.2" />
+  <arg name="simplify_path" default="true" />
+  <arg name="simplify_clearance_cost_margin" default="0.30" />
+  <arg name="replan_distance" default="1.0" />
+  <arg name="unity_path_min_input_spacing" default="0.05" />
+  <arg name="unity_path_resample_spacing" default="0.30" />
+  <arg name="unity_path_smoothing_iterations" default="0" />
+  <arg name="unity_path_corner_cut" default="0.12" />
+  <arg name="unity_path_simplify_tolerance" default="0.25" />
+  <arg name="unity_path_max_points" default="260" />
+  <arg name="unity_path_hover_height" default="0.0" />
+
+  <arg name="enable_image_overlay" default="false" />
+  <arg name="image_topic" default="/arducam_imx219/image_raw" />
+  <arg name="camera_info_topic" default="/arducam_imx219/camera_info" />
+  <arg name="overlay_topic" default="/path_planner/overlay_image" />
+  <arg name="pose_topic" default="/planner/current_pose" />
+  <arg name="overlay_floor_z" default="0.03" />
+  <arg name="camera_height" default="1.55" />
+  <arg name="force_camera_height" default="true" />
+  <arg name="camera_pitch_deg" default="-12.0" />
+  <arg name="camera_yaw_offset_deg" default="0.0" />
+  <arg name="camera_forward_offset" default="0.0" />
+  <arg name="camera_right_offset" default="0.0" />
+  <arg name="camera_up_offset" default="0.0" />
+  <arg name="horizontal_fov_deg" default="70.0" />
+  <arg name="use_path_start_fallback" default="true" />
+  <arg name="publish_passthrough" default="true" />
+
+  <node
+    pkg="occupancy_path_planner"
+    type="occupancy_path_planner_node.py"
+    name="occupancy_path_planner"
+    output="screen">
+    <param name="occupancy_topic" value="$(arg occupancy_topic)" />
+    <param name="start_topic" value="$(arg start_topic)" />
+    <param name="goal_topic" value="$(arg goal_topic)" />
+    <param name="path_topic" value="$(arg path_topic)" />
+    <param name="path_marker_topic" value="$(arg path_marker_topic)" />
+    <param name="obstacle_threshold" value="$(arg obstacle_threshold)" />
+    <param name="allow_unknown" value="$(arg allow_unknown)" />
+    <param name="connectivity" value="$(arg connectivity)" />
+    <param name="inflation_radius" value="$(arg inflation_radius)" />
+    <param name="snap_to_free_radius" value="$(arg snap_to_free_radius)" />
+    <param name="path_z_offset" value="$(arg path_z_offset)" />
+    <param name="path_line_width" value="$(arg path_line_width)" />
+    <param name="path_marker_alpha" value="$(arg path_marker_alpha)" />
+    <param name="preferred_clearance" value="$(arg preferred_clearance)" />
+    <param name="clearance_cost_weight" value="$(arg clearance_cost_weight)" />
+    <param name="clearance_cost_power" value="$(arg clearance_cost_power)" />
+    <param name="centerline_cost_weight" value="$(arg centerline_cost_weight)" />
+    <param name="centerline_clearance" value="$(arg centerline_clearance)" />
+    <param name="centerline_cost_power" value="$(arg centerline_cost_power)" />
+    <param name="turn_cost_weight" value="$(arg turn_cost_weight)" />
+    <param name="simplify_path" value="$(arg simplify_path)" />
+    <param name="simplify_clearance_cost_margin" value="$(arg simplify_clearance_cost_margin)" />
+    <param name="replan_distance" value="$(arg replan_distance)" />
+  </node>
+
+  <node
+    if="$(arg enable_unity_path_processor)"
+    pkg="occupancy_path_planner"
+    type="unity_path_processor_node.py"
+    name="unity_path_processor"
+    output="screen">
+    <param name="input_path_topic" value="$(arg path_topic)" />
+    <param name="output_path_topic" value="$(arg unity_path_topic)" />
+    <param name="min_input_spacing" value="$(arg unity_path_min_input_spacing)" />
+    <param name="resample_spacing" value="$(arg unity_path_resample_spacing)" />
+    <param name="smoothing_iterations" value="$(arg unity_path_smoothing_iterations)" />
+    <param name="corner_cut" value="$(arg unity_path_corner_cut)" />
+    <param name="simplify_tolerance" value="$(arg unity_path_simplify_tolerance)" />
+    <param name="max_points" value="$(arg unity_path_max_points)" />
+    <param name="use_fixed_height" value="true" />
+    <param name="hover_height" value="$(arg unity_path_hover_height)" />
+  </node>
+
+  <node
+    if="$(arg enable_image_overlay)"
+    pkg="occupancy_path_planner"
+    type="path_live_image_overlay.py"
+    name="path_live_image_overlay"
+    output="screen">
+    <param name="image_topic" value="$(arg image_topic)" />
+    <param name="camera_info_topic" value="$(arg camera_info_topic)" />
+    <param name="overlay_topic" value="$(arg overlay_topic)" />
+    <param name="path_topic" value="$(arg path_topic)" />
+    <param name="pose_topic" value="$(arg pose_topic)" />
+    <param name="floor_z" value="$(arg overlay_floor_z)" />
+    <param name="camera_height" value="$(arg camera_height)" />
+    <param name="force_camera_height" value="$(arg force_camera_height)" />
+    <param name="camera_pitch_deg" value="$(arg camera_pitch_deg)" />
+    <param name="camera_yaw_offset_deg" value="$(arg camera_yaw_offset_deg)" />
+    <param name="camera_forward_offset" value="$(arg camera_forward_offset)" />
+    <param name="camera_right_offset" value="$(arg camera_right_offset)" />
+    <param name="camera_up_offset" value="$(arg camera_up_offset)" />
+    <param name="horizontal_fov_deg" value="$(arg horizontal_fov_deg)" />
+    <param name="use_path_start_fallback" value="$(arg use_path_start_fallback)" />
+    <param name="publish_passthrough" value="$(arg publish_passthrough)" />
+  </node>
+</launch>
