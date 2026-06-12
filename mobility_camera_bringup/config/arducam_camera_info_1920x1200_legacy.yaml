@@ -1,0 +1,36 @@
+# Legacy 1920x1200 calibration, recovered from the FULL_OPENCV fallback
+# hardcoded in hloc_persistent_localization_node.py (build_query_line, lines
+# ~876-895). Use this for replaying old bags (e.g. 2026-05-27-17-44-06.bag)
+# recorded before the camera was switched to 960x600.
+#
+# To use: point ~camera_info_topic at a publisher loading this file, or leave
+# ~camera_info_topic empty so the node's built-in 1920x1200 fallback applies
+# automatically (equivalent, but explicit is clearer for record-keeping).
+image_width: 1920
+image_height: 1200
+camera_name: arducam_imx219
+camera_matrix:
+  rows: 3
+  cols: 3
+  data: [1216.44616313, 0, 956.646819947, 0, 1214.18811858, 583.900125334, 0, 0, 1]
+distortion_model: plumb_bob
+distortion_coefficients:
+  rows: 1
+  cols: 5
+  data: [-0.0819699141448, -0.03313321259, -0.00244342779542, -0.000488657078362, 0.0165047957227]
+rectification_matrix:
+  rows: 3
+  cols: 3
+  data: [1, 0, 0, 0, 1, 0, 0, 0, 1]
+projection_matrix:
+  rows: 3
+  cols: 4
+  data: [1216.44616313, 0, 956.646819947, 0, 0, 1214.18811858, 583.900125334, 0, 0, 0, 1, 0]
+binning_x: 0
+binning_y: 0
+roi:
+  x_offset: 0
+  y_offset: 0
+  height: 0
+  width: 0
+  do_rectify: false
